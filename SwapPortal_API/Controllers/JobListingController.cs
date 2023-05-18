@@ -26,17 +26,17 @@ namespace SwapPortal_API.Controllers
         public async Task<IActionResult> Create([FromBody] AddJobListingRequestDTO addJobListingRequestDTO)
         {
             //Map DTO to domain Model          
-            var userEntity = mapper.Map<JobListing>(addJobListingRequestDTO);
-            await jobListingRepo.CreateAsync(userEntity);
+            var jobEntity = mapper.Map<JobListing>(addJobListingRequestDTO);
+            await jobListingRepo.CreateAsync(jobEntity);
             //Domain Model to DTO
-            var users = mapper.Map<JobListingDTO>(userEntity);
 
-            return Ok(users);
+
+            return Ok(mapper.Map<JobListingDTO>(jobEntity));
         }
 
 
         [HttpGet]
-        public async Task<IActionResult> GetAll()
+        public async Task<ActionResult<IEnumerable<JobListingDTO>>> GetAll()
         {
             var userEntity = await jobListingRepo.GetAllAsync();
 
@@ -50,10 +50,10 @@ namespace SwapPortal_API.Controllers
             var userEntity = await jobListingRepo.GetByIdAsync(id);
             if (userEntity == null)
             {
-                return BadRequest();
+                return NotFound();
             }
-            var users = mapper.Map<JobListingDTO>(userEntity);
-            return Ok(users);
+
+            return Ok(mapper.Map<JobListingDTO>(userEntity));
 
         }
 
@@ -67,8 +67,8 @@ namespace SwapPortal_API.Controllers
             {
                 return BadRequest();
             }
-            var users = mapper.Map<JobListingDTO>(userEntity);
-            return Ok(users);
+
+            return Ok(mapper.Map<JobListingDTO>(userEntity));
         }
 
         [HttpDelete]
@@ -81,7 +81,7 @@ namespace SwapPortal_API.Controllers
                 return NotFound();
             }
 
-            return Ok("Deleted");
+            return NoContent();
         }
     }
 }

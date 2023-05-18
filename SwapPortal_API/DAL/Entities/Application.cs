@@ -8,10 +8,10 @@ namespace SwapPortal_API.DAL.Entities
         [Key]
         public int ApplicationId { get; set; }
 
-        [Required]
+
         public DateTime ApplicationDate { get; set; }
 
-        [Required]
+
         [MaxLength(50)]
         public string Status { get; set; }
 

@@ -28,14 +28,12 @@ namespace SwapPortal_API.Controllers
             //Map DTO to Domain Model           
             var userEntity = mapper.Map<User>(addUserRequestDTO);
             await userRepo.CreateAsync(userEntity);
-            var users = mapper.Map<UserDTO>(userEntity);
-
-            return Ok(users);
+            return Ok(mapper.Map<UserDTO>(userEntity));
         }
 
         //GET Walks        //GET:/api/walks       
         [HttpGet]
-        public async Task<IActionResult> GetAll()
+        public async Task<ActionResult<IEnumerable<UserDTO>>> GetAll()
         {
             var userEntity = await userRepo.GetAllAsync();
 
@@ -49,7 +47,7 @@ namespace SwapPortal_API.Controllers
             var userEntity = await userRepo.GetByIdAsync(id);
             if (userEntity == null)
             {
-                return BadRequest();
+                return NotFound();
             }
             var users = mapper.Map<UserDTO>(userEntity);
             return Ok(users);
@@ -64,10 +62,9 @@ namespace SwapPortal_API.Controllers
             userEntity = await userRepo.UpdateAsync(id, userEntity);
             if (userEntity == null)
             {
-                return BadRequest();
+                return NotFound();
             }
-            var users = mapper.Map<UserDTO>(userEntity);
-            return Ok(users);
+            return Ok(mapper.Map<UserDTO>(userEntity));
         }
 
         [HttpDelete]
@@ -80,7 +77,7 @@ namespace SwapPortal_API.Controllers
                 return NotFound();
             }
 
-            return Ok("Deleted");
+            return NoContent();
         }
     }
 }

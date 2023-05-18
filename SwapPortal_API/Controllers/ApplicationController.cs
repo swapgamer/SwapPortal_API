@@ -27,16 +27,16 @@ namespace SwapPortal_API.Controllers
             var ApplicationEntity = mapper.Map<Application>(addAplicationRequestDTO);
             await applicationRepo.CreateAsync(ApplicationEntity);
             //Map domain model to DTO
-            var users = mapper.Map<ApplicationDTO>(ApplicationEntity);
 
-            return Ok(users);
+
+            return Ok(mapper.Map<ApplicationDTO>(ApplicationEntity));
         }
 
 
         //GET Walks        
         //GET:/api/walks       
         [HttpGet]
-        public async Task<IActionResult> GetAll()
+        public async Task<ActionResult<IEnumerable<ApplicationDTO>>> GetAll()
         {
             var userEntity = await applicationRepo.GetAllAsync();
 

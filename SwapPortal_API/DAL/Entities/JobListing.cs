@@ -9,11 +9,11 @@ namespace SwapPortal_API.DAL.Entities
         [Key]
         public int JobId { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "Job title is required.")]
         [MaxLength(50)]
         public string JobTitle { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "Job description is required.")]
         [MaxLength(200)]
         public string JobDesc { get; set; }
 
@@ -29,8 +29,8 @@ namespace SwapPortal_API.DAL.Entities
         [MaxLength(50)]
         public string CompanyName { get; set; }
 
-        [Required]
-        public int Salary { get; set; }
+        [Range(0, double.MaxValue, ErrorMessage = "Salary must be a positive value.")]
+        public decimal Salary { get; set; }
 
 
 
