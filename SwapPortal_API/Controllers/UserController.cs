@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SwapPortal_API.BLL.DTO;
 using SwapPortal_API.DAL.Entities;
@@ -8,31 +9,30 @@ namespace SwapPortal_API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+
+
     public class UserController : ControllerBase
     {
         private readonly IMapper mapper;
         private readonly IUserRepo userRepo;
+        private readonly IApplicationRepo applicationRepo;
 
-        public UserController(IMapper mapper, IUserRepo userRepo)
+        public UserController(IMapper mapper, IUserRepo userRepo, IJobListingRepo jobListingRepo, IApplicationRepo applicationRepo)
         {
             this.mapper = mapper;
             this.userRepo = userRepo;
+            this.applicationRepo = applicationRepo;
         }
 
         //Create User
         //Post:/api/users        
-        [HttpPost]
 
-        public async Task<IActionResult> Create([FromBody] AddUserRequestDTO addUserRequestDTO)
-        {
-            //Map DTO to Domain Model           
-            var userEntity = mapper.Map<User>(addUserRequestDTO);
-            await userRepo.CreateAsync(userEntity);
-            return Ok(mapper.Map<UserDTO>(userEntity));
-        }
 
         //GET Walks        //GET:/api/walks       
         [HttpGet]
+        [Route("admin")]
+        [Authorize(Roles = "Admin")]
+
         public async Task<ActionResult<IEnumerable<UserDTO>>> GetAll()
         {
             var userEntity = await userRepo.GetAllAsync();
@@ -41,7 +41,7 @@ namespace SwapPortal_API.Controllers
         }
 
         [HttpGet]
-        [Route("{id:int}")]
+        [Route("{id:int}/admin")]
         public async Task<IActionResult> GetById([FromRoute] int id)
         {
             var userEntity = await userRepo.GetByIdAsync(id);
@@ -78,6 +78,13 @@ namespace SwapPortal_API.Controllers
             }
 
             return NoContent();
+        }
+        [HttpGet]
+        public async Task<ActionResult<IEnumerable<ApplicationDTO>>> GetAllApplicants()
+        {
+            var userEntity = await applicationRepo.GetAllAsync();
+
+            return Ok(mapper.Map<List<ApplicationDTO>>(userEntity));
         }
     }
 }

@@ -26,5 +26,22 @@ namespace SwapPortal_API.DAL.Repository.Implementation
             return await dbContext.Applications.ToListAsync(); ;
         }
 
+        public async Task<Application> GetByIdAsync(int id)
+        {
+            return await dbContext.Applications.FindAsync(id);
+        }
+
+        public async Task<List<Application>> GetByJobListingIdAsync(int jobListingId)
+        {
+            return await dbContext.Applications
+           .Where(a => a.JobId == jobListingId)
+           .ToListAsync();
+        }
+
+        public async Task UpdateAsync(Application application)
+        {
+            dbContext.Applications.Update(application);
+            await dbContext.SaveChangesAsync();
+        }
     }
 }

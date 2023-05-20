@@ -6,5 +6,9 @@ namespace SwapPortal_API.DAL.Repository.Interface
     {
         Task<Application> CreateAsync(Application application);
         Task<List<Application>> GetAllAsync();
+        Task<List<Application>> GetByJobListingIdAsync(int jobListingId);
+        Task<Application> GetByIdAsync(int id);
+        Task UpdateAsync(Application application);
+
     }
 }

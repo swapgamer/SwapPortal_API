@@ -2,6 +2,7 @@
 {
     public class AddAplicationRequestDTO
     {
+        public int UserId { get; set; }
         public int JobId { get; set; }
 
 

@@ -6,6 +6,7 @@ using System.Text;
 namespace SwapPortal_API.Infrastructure
 {
 
+
     public class JWT
     {
         public static string GenerateToken(Dictionary<string, string> claimsToBeAdded, string key)
@@ -33,5 +34,6 @@ namespace SwapPortal_API.Infrastructure
         }
     }
 }
+
 
 

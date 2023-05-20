@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SwapPortal_API.DAL.Context;
 
@@ -11,9 +12,10 @@ using SwapPortal_API.DAL.Context;
 namespace SwapPortal_API.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230520030624_updated1")]
+    partial class updated1
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -168,11 +170,6 @@ namespace SwapPortal_API.Migrations
                         {
                             UserRoleId = 2,
                             UserRolesName = "Applicant"
-                        },
-                        new
-                        {
-                            UserRoleId = 3,
-                            UserRolesName = "Admin"
                         });
                 });
 

@@ -27,7 +27,12 @@ namespace SwapPortal_API.DAL.Context
         {
             UserRoleId = 2, // Update with the correct primary key value
             UserRolesName = "Applicant"
-        }
+        },
+         new UserRole
+         {
+             UserRoleId = 3, // Update with the correct primary key value
+             UserRolesName = "Admin"
+         }
         );
 
         }

@@ -39,10 +39,17 @@ namespace SwapPortal_API.DAL.Repository.Implementation
 
         }
 
+        public async Task<User> GetByEmailAsync(string email)
+        {
+            return await dbContext.Users.Include("UserRole").FirstOrDefaultAsync(x => x.Email == email);
+        }
+
         public async Task<User> GetByIdAsync(int id)
         {
             return await dbContext.Users.Include("UserRole").FirstOrDefaultAsync(x => x.UserId == id);
         }
+
+
 
         public async Task<User> UpdateAsync(int id, User user)
         {

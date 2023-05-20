@@ -8,15 +8,19 @@ namespace SwapPortal_API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+
+
     public class ApplicationController : ControllerBase
     {
         private readonly IMapper mapper;
         private readonly IApplicationRepo applicationRepo;
+        private readonly IJobListingRepo jobListingRepo;
 
-        public ApplicationController(IMapper mapper, IApplicationRepo applicationRepo)
+        public ApplicationController(IMapper mapper, IApplicationRepo applicationRepo, IJobListingRepo jobListingRepo)
         {
             this.mapper = mapper;
             this.applicationRepo = applicationRepo;
+            this.jobListingRepo = jobListingRepo;
         }
 
         [HttpPost]
@@ -35,13 +39,26 @@ namespace SwapPortal_API.Controllers
 
         //GET Walks        
         //GET:/api/walks       
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<ApplicationDTO>>> GetAll()
-        {
-            var userEntity = await applicationRepo.GetAllAsync();
 
-            return Ok(mapper.Map<List<ApplicationDTO>>(userEntity));
+
+        [HttpPost]
+        [Route("{jobId:int}/apply")]
+        public async Task<IActionResult> ApplyForJob([FromRoute] int jobId, [FromBody] AddAplicationRequestDTO adApplicationRequestDTO)
+        {
+            var jobListingEntity = await jobListingRepo.GetByIdAsync(jobId);
+            if (jobListingEntity == null)
+            {
+                return NotFound();
+            }
+
+            var applicationEntity = mapper.Map<Application>(adApplicationRequestDTO);
+            applicationEntity.JobId = jobId;
+
+            await applicationRepo.CreateAsync(applicationEntity);
+
+            return Ok(mapper.Map<ApplicationDTO>(applicationEntity));
         }
+
 
         /*
                [HttpGet]

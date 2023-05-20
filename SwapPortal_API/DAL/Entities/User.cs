@@ -19,7 +19,7 @@ namespace SwapPortal_API.DAL.Entities
         public string Email { get; set; }
 
         [Required(ErrorMessage = "Password is required.")]
-        [StringLength(50, ErrorMessage = "Password must be between 6 and 50 characters.", MinimumLength = 6)]
+        [StringLength(60, ErrorMessage = "Password must be between 6 and 60 characters.", MinimumLength = 6)]
         public string Password { get; set; }
 
         [Required]

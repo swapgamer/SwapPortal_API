@@ -8,20 +8,26 @@ namespace SwapPortal_API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+
     public class JobListingController : ControllerBase
     {
         private readonly IMapper mapper;
         private readonly IJobListingRepo jobListingRepo;
+        private readonly IApplicationRepo applicationRepo;
+
 
         //Creating Constructor
-        public JobListingController(IMapper mapper, IJobListingRepo jobListingRepo)
+        public JobListingController(IMapper mapper, IJobListingRepo jobListingRepo, IApplicationRepo applicationRepo)
         {
             this.mapper = mapper;
             this.jobListingRepo = jobListingRepo;
+            this.applicationRepo = applicationRepo;
         }
 
 
         [HttpPost]
+        [Route("Recruiter")]
+
 
         public async Task<IActionResult> Create([FromBody] AddJobListingRequestDTO addJobListingRequestDTO)
         {
@@ -36,6 +42,7 @@ namespace SwapPortal_API.Controllers
 
 
         [HttpGet]
+        [Route("Admin")]
         public async Task<ActionResult<IEnumerable<JobListingDTO>>> GetAll()
         {
             var userEntity = await jobListingRepo.GetAllAsync();
@@ -44,7 +51,7 @@ namespace SwapPortal_API.Controllers
         }
 
         [HttpGet]
-        [Route("{id:int}")]
+        [Route("{id:int}/Admin")]
         public async Task<IActionResult> GetById([FromRoute] int id)
         {
             var userEntity = await jobListingRepo.GetByIdAsync(id);
@@ -58,7 +65,8 @@ namespace SwapPortal_API.Controllers
         }
 
         [HttpPut]
-        [Route("{id:int}")]
+        [Route("{id:int}/Recruiter")]
+
         public async Task<IActionResult> Update([FromRoute] int id, UpdateJobListingDTO updateJobListingDTO)
         {
             var userEntity = mapper.Map<JobListing>(updateJobListingDTO);
@@ -73,6 +81,7 @@ namespace SwapPortal_API.Controllers
 
         [HttpDelete]
         [Route("{id:int}")]
+
         public async Task<IActionResult> Delete([FromRoute] int id)
         {
             var entityDeleted = await jobListingRepo.DeleteAsync(id);
@@ -83,5 +92,68 @@ namespace SwapPortal_API.Controllers
 
             return NoContent();
         }
+
+
+
+        [HttpGet]
+        [Route("{id:int}/applicants")]
+        public async Task<IActionResult> GetApplicants([FromRoute] int id)
+        {
+            var jobListingEntity = await jobListingRepo.GetByIdAsync(id);
+            if (jobListingEntity == null)
+            {
+                return NotFound();
+            }
+
+            var applicants = await applicationRepo.GetByJobListingIdAsync(id);
+            var applicantDTOs = mapper.Map<List<ApplicationDTO>>(applicants);
+
+            return Ok(applicantDTOs);
+        }
+
+        [HttpPut]
+        [Route("{id:int}/applications/{applicationId:int}/approve")]
+        public async Task<IActionResult> ApproveApplication([FromRoute] int id, [FromRoute] int applicationId)
+        {
+            var jobListingEntity = await jobListingRepo.GetByIdAsync(id);
+            if (jobListingEntity == null)
+            {
+                return NotFound();
+            }
+
+            var applicationEntity = await applicationRepo.GetByIdAsync(applicationId);
+            if (applicationEntity == null)
+            {
+                return NotFound();
+            }
+
+            applicationEntity.Status = "Approved";
+            await applicationRepo.UpdateAsync(applicationEntity);
+
+            return Ok("Approved");
+        }
+
+        [HttpPut]
+        [Route("{id:int}/applications/{applicationId:int}/reject")]
+        public async Task<IActionResult> RejectApplication([FromRoute] int id, [FromRoute] int applicationId)
+        {
+            var jobListingEntity = await jobListingRepo.GetByIdAsync(id);
+            if (jobListingEntity == null)
+            {
+                return NotFound();
+            }
+
+            var applicationEntity = await applicationRepo.GetByIdAsync(applicationId);
+            if (applicationEntity == null)
+            {
+                return NotFound();
+            }
+
+            applicationEntity.Status = "Rejected";
+            await applicationRepo.UpdateAsync(applicationEntity);
+
+            return Ok("Rejected");
+        }
+
     }
 }
