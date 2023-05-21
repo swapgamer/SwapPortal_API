@@ -42,6 +42,7 @@ namespace SwapPortal_API.Controllers
 
         [HttpGet]
         [Route("{id:int}/admin")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> GetById([FromRoute] int id)
         {
             var userEntity = await userRepo.GetByIdAsync(id);
@@ -56,6 +57,8 @@ namespace SwapPortal_API.Controllers
 
         [HttpPut]
         [Route("{id:int}")]
+
+
         public async Task<IActionResult> Update([FromRoute] int id, UpdateUserRequestDTO updateUserRequestDTO)
         {
             var userEntity = mapper.Map<User>(updateUserRequestDTO);
@@ -68,7 +71,8 @@ namespace SwapPortal_API.Controllers
         }
 
         [HttpDelete]
-        [Route("{id:int}")]
+        [Route("{id:int}/admin")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Delete([FromRoute] int id)
         {
             var entityDeleted = await userRepo.DeleteAsync(id);
@@ -80,6 +84,8 @@ namespace SwapPortal_API.Controllers
             return NoContent();
         }
         [HttpGet]
+        [Route("allapplicants")]
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult<IEnumerable<ApplicationDTO>>> GetAllApplicants()
         {
             var userEntity = await applicationRepo.GetAllAsync();

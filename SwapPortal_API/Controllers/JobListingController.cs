@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SwapPortal_API.BLL.DTO;
 using SwapPortal_API.DAL.Entities;
@@ -26,8 +27,8 @@ namespace SwapPortal_API.Controllers
 
 
         [HttpPost]
-        [Route("Recruiter")]
-
+        [Route("recruiter")]
+        [Authorize(Roles = "Recruiter")]
 
         public async Task<IActionResult> Create([FromBody] AddJobListingRequestDTO addJobListingRequestDTO)
         {
@@ -42,7 +43,7 @@ namespace SwapPortal_API.Controllers
 
 
         [HttpGet]
-        [Route("Admin")]
+        [Route("Applicant")]
         public async Task<ActionResult<IEnumerable<JobListingDTO>>> GetAll()
         {
             var userEntity = await jobListingRepo.GetAllAsync();
@@ -66,6 +67,7 @@ namespace SwapPortal_API.Controllers
 
         [HttpPut]
         [Route("{id:int}/Recruiter")]
+        [Authorize(Roles = "Recruiter")]
 
         public async Task<IActionResult> Update([FromRoute] int id, UpdateJobListingDTO updateJobListingDTO)
         {
@@ -81,7 +83,7 @@ namespace SwapPortal_API.Controllers
 
         [HttpDelete]
         [Route("{id:int}")]
-
+        [Authorize(Roles = "Recruiter")]
         public async Task<IActionResult> Delete([FromRoute] int id)
         {
             var entityDeleted = await jobListingRepo.DeleteAsync(id);
@@ -97,6 +99,7 @@ namespace SwapPortal_API.Controllers
 
         [HttpGet]
         [Route("{id:int}/applicants")]
+        [Authorize(Roles = "Recruiter")]
         public async Task<IActionResult> GetApplicants([FromRoute] int id)
         {
             var jobListingEntity = await jobListingRepo.GetByIdAsync(id);
@@ -113,6 +116,7 @@ namespace SwapPortal_API.Controllers
 
         [HttpPut]
         [Route("{id:int}/applications/{applicationId:int}/approve")]
+        [Authorize(Roles = "Recruiter")]
         public async Task<IActionResult> ApproveApplication([FromRoute] int id, [FromRoute] int applicationId)
         {
             var jobListingEntity = await jobListingRepo.GetByIdAsync(id);
@@ -135,6 +139,7 @@ namespace SwapPortal_API.Controllers
 
         [HttpPut]
         [Route("{id:int}/applications/{applicationId:int}/reject")]
+        [Authorize(Roles = "Recruiter")]
         public async Task<IActionResult> RejectApplication([FromRoute] int id, [FromRoute] int applicationId)
         {
             var jobListingEntity = await jobListingRepo.GetByIdAsync(id);
